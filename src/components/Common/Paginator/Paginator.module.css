@@ -1,0 +1,13 @@
+.pageNumber span {
+    margin-right: 5px;
+}
+
+.pageNumber span:hover {
+   color: rgb(43, 187, 14);
+}
+
+
+
+.pageSelected {
+    font-weight: bold;    
+}
