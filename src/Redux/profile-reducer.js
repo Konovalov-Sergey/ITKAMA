@@ -3,6 +3,7 @@ import { profileApi, usersApi } from "../API/api";
 const ADD_POST = 'ADD-POST';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
 const SET_STATUS = 'SET_STATUS';
+const SAVE_PHOTO_SUCCESS = 'SAVE_PHOTO_SUCCESS';
 
 let initialState = {
     posts: [
@@ -34,7 +35,10 @@ const profileReducer = (state = initialState, action) => {
         }        
         case SET_STATUS: {
             return {...state, status: action.status}
-        }        
+        }  
+        case SAVE_PHOTO_SUCCESS: {
+            return {...state, profile: {...state.profile, photos: action.photos}}
+        }      
         default:
             return state;
     }
@@ -48,6 +52,10 @@ export const setUserProfile = (profile) => {
 
 export const setStatus = (status) => {
     return {type: SET_STATUS, status}
+};
+
+export const savePhotoSuccess = (photos) => {
+    return {type: SAVE_PHOTO_SUCCESS, photos}
 }
 
 //thunkCreator
@@ -68,6 +76,15 @@ export const updateStatus = (status) => {
         let response = await profileApi.updateStatus(status)
         if (response.data.resultCode === 0) {
             dispatch(setStatus(status))
+        }
+    }
+}
+
+export const savePhoto = (file) => {
+    return async (dispatch) => {
+        let response = await profileApi.savePhoto(file);
+        if (response.data.resultCode === 0) {
+            dispatch(savePhotoSuccess(response.data.data.photos))
         }
     }
 }
