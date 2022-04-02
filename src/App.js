@@ -39,7 +39,7 @@ class App extends React.Component {
                     />          
                     <Route 
                         /*exact*/ path='/Users' 
-                        render = { () => <UsersContainer /> }
+                        render = { () => <UsersContainer pageTitle={"Samuraj"} /> }
                     />    
                     <Route 
                         /*exact*/ path='/login' 
