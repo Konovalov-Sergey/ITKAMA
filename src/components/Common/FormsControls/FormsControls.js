@@ -1,4 +1,5 @@
 import React from "react";
+import { WrappedFieldProps } from "redux-form";
 import style from './../FormsControls/FormsСontrols.module.css';
 
 export const Textarea = ({input, meta, ...props}) => {
@@ -27,3 +28,4 @@ export const Input = ({input, meta, ...props}) => {
     )
 };
 
+//: React.FC<WrappedFieldProps>

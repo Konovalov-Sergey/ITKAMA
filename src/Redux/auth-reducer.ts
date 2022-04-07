@@ -1,25 +1,22 @@
-import { type } from "os";
-import { authApi } from "../API/api";
+import { AppStateType } from './redux-store';
+import { ThunkAction } from "redux-thunk";
+import { authApi, ResultCodesEnum } from "../API/api";
 
 const SET_USER_DATA = 'SET_USER_DATA';
 
-export type InitialStateType = {
-    id: number | null,
-    login: string | null,
-    email: string | null,
-    isFetching: boolean,
-    isAuth: boolean
-}
-
 let initialState = {
-    id: null,
-    login: null,
-    email: null,
+    id: null as number | null,
+    login: null as string | null,
+    email: null as string | null,
     isFetching: false,
     isAuth: false
 };
 
-const authReducer = (state = initialState, action: any): InitialStateType => {
+type InitialStateType = typeof initialState
+
+type ActionTypes = SetAuthUserDataActionType
+
+const authReducer = (state = initialState, action: ActionTypes): InitialStateType => {
     switch(action.type) {
         case SET_USER_DATA: 
             return {
@@ -30,6 +27,8 @@ const authReducer = (state = initialState, action: any): InitialStateType => {
             return state;
     };      
 };
+
+//actionCreator
 type SetAuthUserDataActionPayloadType = {
     id: number|null,
     login: string|null,
@@ -37,32 +36,34 @@ type SetAuthUserDataActionPayloadType = {
     isAuth: boolean
 };
 
-type SetAuthUserDataActionType = {
+export type SetAuthUserDataActionType = {
     type: typeof SET_USER_DATA,
     payload: SetAuthUserDataActionPayloadType
 };
 
-//actionCreator
 export const setAuthUserData = (id:number|null, login:string|null, email:string|null, isAuth:boolean):SetAuthUserDataActionType => {
     return {type: SET_USER_DATA, payload:{id, login, email, isAuth}}    
 };
 
-export const getAuthUserData = () => async (dispatch:any) => {
-    let response = await authApi.setLogin()
-        if (response.data.resultCode === 0) {
-            let {id, login, email} = response.data.data;
+//ThunkCreator
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown,  ActionTypes >
+
+export const getAuthUserData = (): ThunkType => async (dispatch) => {
+    let setLoginData = await authApi.setLogin()
+        if (setLoginData.resultCode === ResultCodesEnum.Success) {
+            let {id, login, email} = setLoginData.data;
             dispatch(setAuthUserData(id, login, email, true));
         }                
 };
 
-export const login = (email:string, password:string, rememberMe:boolean) => async (dispatch:any) => {
-    let response = await authApi.login(email, password, rememberMe)
-        if (response.data.resultCode === 0) {
+export const login = (email:string, password:string, rememberMe:boolean): ThunkType => async (dispatch) => {
+    let loginData = await authApi.login(email, password, rememberMe)
+        if (loginData.resultCode === ResultCodesEnum.Success) {
             dispatch(getAuthUserData())
         }
 };
 
-export const logout = () => async (dispatch:any) => {
+export const logout = (): ThunkType => async (dispatch) => {
     let response = await authApi.logout()
         if (response.data.resultCode === 0) {
             dispatch(setAuthUserData(null, null, null, false))
