@@ -1,6 +1,6 @@
 import { AppStateType, InferActionsTypes } from './redux-store';
 import { UserType } from './../types/types';
-import { usersApi } from "../API/api";
+import { usersApi } from "../API/userAPI";
 import { ThunkAction } from 'redux-thunk';
 
 let initialState = {
@@ -94,8 +94,8 @@ export const requestUsers = (currentPage: number, pageSize: number): ThunkType =
 export const follow = (userId: number): ThunkType => {
     return async (dispatch) => {
         dispatch(actions.toggleFollowingProgress(true, userId));
-        let response = await usersApi.followPost(userId)
-            if (response.data.resultCode === 0) {
+        let response = await usersApi.follow(userId)
+            if (response.resultCode === 0) {
                 dispatch(actions.followSuccess(userId));
             }
             dispatch(actions.toggleFollowingProgress(false, userId));
@@ -105,8 +105,8 @@ export const follow = (userId: number): ThunkType => {
 export const unfollow = (userId: number): ThunkType => {
     return async (dispatch) => {
         dispatch(actions.toggleFollowingProgress(true, userId));
-        let response = await usersApi.followDelete(userId)
-            if (response.data.resultCode === 0) {
+        let response = await usersApi.unfollow(userId)
+            if (response.resultCode === 0) {
                 dispatch(actions.unfollowSuccess(userId));
             }
             dispatch(actions.toggleFollowingProgress(false, userId));
