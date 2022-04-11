@@ -9,6 +9,12 @@ import { AppStateType } from '../../Redux/redux-store';
 
 const maxLength = maxLengthCreator(40);
 
+type LoginFormValuesType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
+
 const LoginForm: React.FC<InjectedFormProps<LoginFormValuesType>> = (props) => {
     return (
         <form onSubmit = {props.handleSubmit}>
@@ -47,11 +53,7 @@ type MapDispatchToPropsType = {
     login: (email:string, password:string, rememberMe:boolean) => void
 }
 
-type LoginFormValuesType = {
-    email: string
-    password: string
-    rememberMe: boolean
-}
+
 
 const Login: React.FC<MapStateToPropsType & MapDispatchToPropsType> = (props) => {
     const onSubmit = (formData: any) => {
