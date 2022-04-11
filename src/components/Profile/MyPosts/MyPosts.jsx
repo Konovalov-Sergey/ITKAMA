@@ -1,39 +1,26 @@
-import React from 'react';
+import React, { memo } from 'react';
 import AddPostReduxform from './AddNewPostForm';
 import style from './MyPosts.module.css';
 import Post from './Post/Post';
 
 
-class MyPosts extends React.Component {
+const MyPosts = React.memo(props => {
+  let posts = props.posts.map(post => <Post message={post.message} 
+                                                  key={post.id}
+                                                  likesCount={post.likesCount} />)
 
-  
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps !== this.props || nextState !== this.State
-  }
-
-  render() {
-
-      let posts = this.props.posts.map(post => <Post message={post.message} 
-                                                //id={post.id} 
-                                                key={post.id}
-                                                likesCount={post.likesCount} />)
-
-  // let newPostElement = React.createRef();
-
-  let onAddPost = (values) => {
-      this.props.addPost(values.newPostText);
-  }
-    return (
-      <div className={style.myPosts}>
-          My posts
-          <AddPostReduxform onSubmit={onAddPost}/>
-          <div className={style.posts}>
-              {posts}
-          </div>
-      </div>
-    )
-  }  
-
-}
+    let onAddPost = (values) => {
+        props.addPost(values.newPostText);
+    }
+      return (
+        <div className={style.myPosts}>
+            My posts
+            <AddPostReduxform onSubmit={onAddPost}/>
+            <div className={style.posts}>
+                {posts}
+            </div>
+        </div>
+      )
+}) 
 
 export default MyPosts;
