@@ -28,8 +28,7 @@ const profileReducer = (state = initialState, action: ActionsTypes): InitialStat
             };
             return {
                 ...state,
-                posts: [...state.posts, newPost],
-                newPostText:''
+                posts: [...state.posts, newPost]
             };            
         }             
         case 'SN/PROFILE/SET_USER_PROFILE' : {
@@ -77,9 +76,14 @@ export const getStatus = (userId:number) => {
 };
 export const updateStatus = (status:string) => {
     return async (dispatch: ThunkType, getState: GetAppStateType) => {
-        let data = await profileApi.updateStatus(status)
-        if (data.resultCode === 0) {
-            dispatch(actions.setStatus(status))
+        try {
+            let data = await profileApi.updateStatus(status)
+            if (data.resultCode === 0) {
+                dispatch(actions.setStatus(status))
+            
+            }
+        } catch (error) {
+            //
         }
     }
 }
