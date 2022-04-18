@@ -3,6 +3,9 @@ import { AppStateType } from "./redux-store";
 export const getUsers = (state: AppStateType) => {
     return state.usersPage.users
 };
+export const getUsersFilter = (state: AppStateType) => {
+    return state.usersPage.filter
+};
 
 export const getPageSize = (state: AppStateType) => {
     return state.usersPage.pageSize
@@ -22,4 +25,8 @@ export const getIsFetching = (state: AppStateType) => {
 
 export const getFollowingInProgress = (state: AppStateType) => {
     return state.usersPage.followingInProgress
+};
+
+export const getIsAuth = (state: AppStateType) => {
+    return state.auth.isAuth
 };

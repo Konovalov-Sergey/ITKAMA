@@ -1,11 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { login } from '../../Redux/auth-reducer';
 import { maxLengthCreator, required } from '../../utils/validators/validators';
 import { Input } from '../Common/FormsControls/FormsControls';
 import { Redirect } from "react-router-dom";
-import { AppStateType } from '../../Redux/redux-store';
+import { getIsAuth } from '../../Redux/users-selector';
+import { login } from '../../Redux/auth-reducer';
 
 const maxLength = maxLengthCreator(40);
 
@@ -47,20 +47,17 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormValuesType>> = (props) => {
 // form: 'login' название формы
 const LoginReduxForm = reduxForm<LoginFormValuesType>({form: 'login'})(LoginForm)
 
-type MapStateToPropsType = {isAuth: boolean}
 
-type MapDispatchToPropsType = {
-    login: (email:string, password:string, rememberMe:boolean) => void
-}
+export const Login: React.FC = (props) => {
 
+    const isAuth = useSelector(getIsAuth);
+    const dispatch = useDispatch();
 
-
-const Login: React.FC<MapStateToPropsType & MapDispatchToPropsType> = (props) => {
     const onSubmit = (formData: any) => {
-        props.login(formData.email, formData.password, formData.rememberMe);
-    }
+        dispatch(login(formData.email, formData.password, formData.rememberMe));
+    };
 
-    if (props.isAuth) {
+    if (isAuth) {
         return  <Redirect to = {"profile"} />
     }
 
@@ -69,9 +66,3 @@ const Login: React.FC<MapStateToPropsType & MapDispatchToPropsType> = (props) =>
         <LoginReduxForm onSubmit = {onSubmit}/>
     </div>
 };
-
-const mapStateToProps = (state: AppStateType): MapStateToPropsType => ({
-    isAuth: state.auth.isAuth
-})
-
-export default connect(mapStateToProps, {login})(Login);
